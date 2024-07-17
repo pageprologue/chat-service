@@ -9,5 +9,4 @@ class ChatServiceApplicationTests {
     @Test
     fun contextLoads() {
     }
-
 }

@@ -40,4 +40,3 @@ class ChatWebSocketHandler : TextWebSocketHandler() {
         // 클라이언트가 연결을 닫았을 때 처리
     }
 }
-

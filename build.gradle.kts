@@ -1,6 +1,7 @@
 plugins {
     id("org.springframework.boot") version "3.3.1"
     id("io.spring.dependency-management") version "1.1.5"
+    id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
     kotlin("plugin.jpa") version "1.9.24"
     kotlin("jvm") version "1.9.24"
     kotlin("plugin.spring") version "1.9.24"
@@ -44,4 +45,16 @@ kotlin {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+ktlint {
+    version.set("0.45.2")
+    android.set(false)
+    outputColorName.set("RED")
+}
+
+tasks.register("formatKotlin") {
+    group = "formatting"
+    description = "Format Kotlin source files"
+    dependsOn("ktlintFormat")
 }
