@@ -19,24 +19,37 @@ class ChatRoomController(
         )
     }
 
-    @GetMapping("/{roomId}")
-    fun findAllChatRoom(@PathVariable roomId: String): ChatRest.Res {
-        return chatRoomService.findChatRoom(roomId)
+    @GetMapping("/{roomUuid}")
+    fun findAllChatRoom(@PathVariable roomUuid: UUID): ChatRest.Res {
+        return chatRoomService.findChatRoom(roomUuid)
     }
 
-    @PutMapping("/{roomId}/users")
+    @PutMapping("/{roomUuid}/users")
     fun addUserToRoom(
-        @PathVariable roomId: String,
+        @PathVariable roomUuid: UUID,
         @RequestBody users: List<UUID>
     ): ChatRest.Res {
-        return chatRoomService.addUserToRoom(roomId, users)
+        return chatRoomService.addUserToRoom(roomUuid, users)
     }
 
-    @DeleteMapping("/{roomId}")
+    @DeleteMapping("/{roomUuid}")
     fun removeUserFromRoom(
-        @PathVariable roomId: String,
+        @PathVariable roomUuid: UUID,
         @RequestParam("userUuid") userUuid: UUID
     ): ChatRest.Res {
-        return chatRoomService.removeUserFromRoom(roomId, userUuid)
+        return chatRoomService.removeUserFromRoom(roomUuid, userUuid)
+    }
+
+    @PostMapping("/{roomUuid}/messages")
+    fun addMessage(
+        @PathVariable roomUuid: UUID,
+        @RequestBody req: ChatRest.Message
+    ) {
+        chatRoomService.addMessage(req)
+    }
+
+    @GetMapping("/{roomUuid}/messages")
+    fun getMessages(@PathVariable roomUuid: UUID): List<ChatRest.Message> {
+        return chatRoomService.getMessages(roomUuid)
     }
 }

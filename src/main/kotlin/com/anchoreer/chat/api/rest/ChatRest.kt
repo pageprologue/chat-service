@@ -10,8 +10,14 @@ interface ChatRest {
     )
 
     data class Res(
-        val id: String,
+        val uuid: UUID,
         val users: Map<UUID, String>,
         val title: String,
+    )
+
+    data class Message(
+        val roomUuid: UUID,
+        val userEmail: String,
+        val content: String,
     )
 }

@@ -35,3 +35,9 @@ Content-Type: application/json
 ### 채팅방 나가기
 DELETE /api/chat/rooms/6696b821c8057f42660aba5b?userUuid=8f538bf0-743f-4641-a3f5-061d07c12082 HTTP/1.1
 Host: localhost:8081
+
+
+### 메시지 조회
+
+GET /api/chat/rooms/4728db38-7077-4fad-977a-b1913c3dc2f3/messages HTTP/1.1
+Host: localhost:8081

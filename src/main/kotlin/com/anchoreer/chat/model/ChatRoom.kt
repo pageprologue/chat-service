@@ -7,11 +7,11 @@ import java.util.*
 
 @Document(collection = "chat_rooms")
 class ChatRoom(
-    @Id val id: String = "",
+    @Id val uuid: UUID = UUID.randomUUID(),
     val title: String,
     val createdAt: Date = Date(),
-    val messages: MutableList<Message> = mutableListOf(),
-    var recentMessage: Message? = null,
+    val messages: MutableList<Messages> = mutableListOf(),
+    var recentMessages: Messages? = null,
     val users: MutableList<User> = mutableListOf()
 ) {
     constructor(title: String, user: User) : this(
@@ -25,12 +25,10 @@ class ChatRoom(
 
     fun leave(uuid: UUID) {
         users.removeIf { it.uuid == uuid }
+    }
 
+    fun send(messages: Messages) {
+        this.messages.add(messages)
+        this.recentMessages = this.messages.last()
     }
 }
-
-data class Message(
-    val userUuid: UUID,
-    val content: String,
-    val timestamp: Date = Date()
-)
