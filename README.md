@@ -1,6 +1,6 @@
 ## 채팅방과 채팅 목록 백엔드 시스템 구현
 
-### 요구 사항
+## 요구 사항
 
 1. **실시간 채팅**
     - 사용자는 제목을 포함하여 채팅방을 생성할 수 있습니다.
@@ -29,3 +29,36 @@
 - 과제에는 README 파일을 포함하여 실행 방법을 기술해주세요.
 - 개발 과정 중 필요한 가정이 있다면, 해당 가정을 README에 기록해주세요.
 - 완성된 프로젝트를 GitHub에 업로드하고, URL을 제출해 주세요.
+
+---
+
+## 구현 내용
+
+### 기술 스택
+- Kotlin, Spring Boot, Websocket, MongoDB, Redis, JPA
+
+### 디렉토리 구조
+```text
+/chat-server
+├── docker
+├── http
+├── src
+│   ├── main
+│   │   ├── chat
+│   │   │   ├── api
+│   │   │   ├── config
+│   │   │   ├── handler
+│   │   │   ├── model
+│   │   │   ├── service
+│   │   ├── user
+│   │   │   ├── api
+│   │   │   ├── model
+│   │   │   └── service
+└── build.gradle
+
+
+```
+
+### 실행 방법 및 테스트
+- `/docker` 폴더에서 `docker-composes.yml` 파일로 mongod, redis 로컬에서 실행 후 서버를 기동합니다.
+- `/http` 폴더에서 엔드포인트 별 테스트를 진행합니다.
