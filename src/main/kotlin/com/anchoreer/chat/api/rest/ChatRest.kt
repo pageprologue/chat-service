@@ -8,4 +8,10 @@ interface ChatRest {
         val user: UUID,
         val title: String,
     )
+
+    data class Res(
+        val id: String,
+        val users: Map<UUID, String>,
+        val title: String,
+    )
 }

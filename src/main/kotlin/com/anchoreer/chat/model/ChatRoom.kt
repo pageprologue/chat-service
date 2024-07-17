@@ -6,8 +6,8 @@ import org.springframework.data.mongodb.core.mapping.Document
 import java.util.*
 
 @Document(collection = "chat_rooms")
-data class ChatRoom(
-    @Id val id: String? = null,
+class ChatRoom(
+    @Id val id: String = "",
     val title: String,
     val createdAt: Date = Date(),
     val messages: MutableList<Message> = mutableListOf(),
@@ -18,6 +18,15 @@ data class ChatRoom(
         title = title,
         users = mutableListOf(user)
     )
+
+    fun invite(users: List<User>) {
+        this.users.addAll(users)
+    }
+
+    fun leave(uuid: UUID) {
+        users.removeIf { it.uuid == uuid }
+
+    }
 }
 
 data class Message(

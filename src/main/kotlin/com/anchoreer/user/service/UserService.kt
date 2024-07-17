@@ -24,4 +24,8 @@ class UserService(
     fun findUserByUuid(uuid: UUID): User? {
         return userRepository.findById(uuid).orElse(null)
     }
+
+    fun findUsersByUuidIn(uuids: List<UUID>): List<User> {
+        return userRepository.findUsersByUuidIn(uuids)
+    }
 }

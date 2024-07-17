@@ -1,0 +1,37 @@
+### 사용자 생성
+POST /api/users?username=aaa@test.com HTTP/1.1
+Host: localhost:8081
+
+### 사용자 조회
+GET /api/users HTTP/1.1
+Host: localhost:8081
+
+### 채팅방 생성
+POST /api/chat/rooms HTTP/1.1
+Host: localhost:8081
+Content-Type: application/json
+
+{
+    "title": "이직 준비방",
+    "user": "2370f919-dfa3-4ac6-a6a2-26cca07fa590"
+}
+
+### 채팅방 조회
+GET /api/chat/rooms/6696b821c8057f42660aba5b HTTP/1.1
+Host: localhost:8081
+
+
+### 사용자 추가
+PUT /api/chat/rooms/6696b821c8057f42660aba5b/users HTTP/1.1
+Host: localhost:8081
+Content-Type: application/json
+
+[
+    "29096289-613b-4dd2-8ccc-8dac1afbb1f9",
+    "8f538bf0-743f-4641-a3f5-061d07c12082"
+]
+
+
+### 채팅방 나가기
+DELETE /api/chat/rooms/6696b821c8057f42660aba5b?userUuid=8f538bf0-743f-4641-a3f5-061d07c12082 HTTP/1.1
+Host: localhost:8081
