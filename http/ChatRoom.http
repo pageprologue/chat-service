@@ -36,8 +36,36 @@ Content-Type: application/json
 DELETE /api/chat/rooms/6696b821c8057f42660aba5b?userUuid=8f538bf0-743f-4641-a3f5-061d07c12082 HTTP/1.1
 Host: localhost:8081
 
+### 채팅 메시지 전송
+
+POST /api/chat/rooms/4728db38-7077-4fad-977a-b1913c3dc2f3/messages HTTP/1.1
+Host: localhost:8081
+Content-Type: application/json
+
+{
+    "roomUuid": "4728db38-7077-4fad-977a-b1913c3dc2f3",
+    "userEmail": "aaa@test.com",
+    "content": "테스트"
+}
+
+
+### 채팅 메시지 전송 (웹소켓 예시)
+
+ws://localhost:8081/chat
+{
+    "roomUuid": "4728db38-7077-4fad-977a-b1913c3dc2f3",
+    "userEmail": "aaa@test.com",
+    "content": "테스트"
+}
+
 
 ### 메시지 조회
 
 GET /api/chat/rooms/4728db38-7077-4fad-977a-b1913c3dc2f3/messages HTTP/1.1
+Host: localhost:8081
+
+
+### 최근 사용자 수
+
+GET /api/chat/rooms/4728db38-7077-4fad-977a-b1913c3dc2f3/recent HTTP/1.1
 Host: localhost:8081

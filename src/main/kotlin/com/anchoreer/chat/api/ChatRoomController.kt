@@ -44,12 +44,18 @@ class ChatRoomController(
     fun addMessage(
         @PathVariable roomUuid: UUID,
         @RequestBody req: ChatRest.Message
-    ) {
+    ): List<ChatRest.Message> {
         chatRoomService.addMessage(req)
+        return chatRoomService.getMessages(roomUuid)
     }
 
     @GetMapping("/{roomUuid}/messages")
     fun getMessages(@PathVariable roomUuid: UUID): List<ChatRest.Message> {
         return chatRoomService.getMessages(roomUuid)
+    }
+
+    @GetMapping("/{roomUuid}/recent")
+    fun getRecentUserCount(@PathVariable roomUuid: UUID): Int {
+        return chatRoomService.getRecentUserCount(roomUuid)
     }
 }

@@ -17,7 +17,7 @@ class ChatWebSocketHandler(
     private val chatRoomService: ChatRoomService
 ) : TextWebSocketHandler() {
 
-    private val sessions = mutableMapOf<String, MutableList<WebSocketSession>>()
+    val sessions = mutableMapOf<String, MutableList<WebSocketSession>>()
     private val objectMapper = jacksonObjectMapper()
 
     override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {

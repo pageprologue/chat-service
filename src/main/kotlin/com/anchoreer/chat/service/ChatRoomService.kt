@@ -1,8 +1,12 @@
 package com.anchoreer.chat.service
 
 import com.anchoreer.chat.api.rest.ChatRest
+import com.anchoreer.chat.model.ActiveUser
 import com.anchoreer.chat.model.ChatRoom
+import com.anchoreer.chat.model.ChatRoomActivity
 import com.anchoreer.chat.model.Messages
+import com.anchoreer.chat.model.repository.ActiveUserRepository
+import com.anchoreer.chat.model.repository.ChatRoomActivityRepository
 import com.anchoreer.chat.model.repository.ChatRoomRepository
 import com.anchoreer.chat.model.repository.MessagesRepository
 import com.anchoreer.user.service.UserService
@@ -16,6 +20,8 @@ class ChatRoomService(
     private val userService: UserService,
     private val chatRoomRepository: ChatRoomRepository,
     private val messagesRepository: MessagesRepository,
+    private val chatRoomActivityRepository: ChatRoomActivityRepository,
+    private val activeUserRepository: ActiveUserRepository,
 ) {
     private val chatRooms = ConcurrentHashMap<String, MutableList<ChatRest.Message>>()
 
@@ -40,6 +46,11 @@ class ChatRoomService(
             }
         )
 
+        users.forEach { user ->
+            activeUserRepository.save(ActiveUser(roomUuid = roomUuid, userEmail = user.username))
+        }
+        chatRoomActivityRepository.save(ChatRoomActivity(roomUuid = roomUuid))
+
         return convertChatRes(chatRoom)
     }
 
@@ -47,6 +58,8 @@ class ChatRoomService(
     fun removeUserFromRoom(roomUuid: UUID, userUuid: UUID): ChatRest.Res {
         val chatRoom = getChatRoom(roomUuid)
         chatRoom.leave(userUuid)
+        activeUserRepository.deleteById(userUuid)
+
         return convertChatRes(chatRoomRepository.save(chatRoom))
     }
 
@@ -65,7 +78,9 @@ class ChatRoomService(
         }
 
         chatRoomRepository.save(chatRoom)
-        chatRooms.computeIfAbsent(chatRoom.uuid.toString()) { mutableListOf() }.add(req)
+
+        chatRoomActivityRepository.save(ChatRoomActivity(roomUuid = chatRoom.uuid))
+        activeUserRepository.save(ActiveUser(roomUuid = chatRoom.uuid, userEmail = req.userEmail))
 
         return chatRoom.messages.takeLast(30).map {
             ChatRest.Message(
@@ -78,13 +93,23 @@ class ChatRoomService(
 
     fun getMessages(roomUuid: UUID): List<ChatRest.Message> {
         val chatRoom = getChatRoom(roomUuid)
-        return chatRoom.messages.takeLast(30).map {
+        val sortedMessages = chatRoom.messages.sortedByDescending { it.timestamp }
+
+        return sortedMessages.takeLast(30).map {
             convertMessage(chatRoom, it)
         }
     }
 
+    fun getRecentUserCount(roomUuid: UUID): Int {
+        val thirtyMinutesAgo = System.currentTimeMillis() - 1800 * 1000
+        val activeUsers = activeUserRepository.findAll()
+            .filter { it.roomUuid == roomUuid }
+        return activeUsers.count { it.lastActiveTime > thirtyMinutesAgo }
+    }
+
     private fun getChatRoom(roomUuid: UUID): ChatRoom {
-        return chatRoomRepository.findChatRoomByUuid(roomUuid).orElseThrow { IllegalArgumentException("Chat room not found") }
+        return chatRoomRepository.findChatRoomByUuid(roomUuid)
+            .orElseThrow { IllegalArgumentException("Chat room not found") }
     }
 
     private fun convertChatRes(chatRoom: ChatRoom) = ChatRest.Res(
